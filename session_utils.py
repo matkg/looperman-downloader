@@ -1,3 +1,5 @@
+from credentials import email, password
+
 """
 Data and Headers generated with
 https://curl.trillworks.com/
@@ -30,8 +32,8 @@ data = {
   'submit': 'submit'
 }
 
-def login(email:str, password:str ,session):
-    email.replace("@", "^%^40")
-    data["user_email"] = email
-    data["upass"] = password
-    session.post('https://www.looperman.com/account/login', headers=headers, data=data)
+def login(session):
+  email.replace("@", "^%^40")
+  data["user_email"] = email
+  data["upass"] = password
+  session.post('https://www.looperman.com/account/login', headers=headers, data=data)

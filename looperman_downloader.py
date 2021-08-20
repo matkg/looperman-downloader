@@ -23,10 +23,6 @@ SETTINGS = {
     TO_BPM: ""  # To tempo
 }
 
-USERNAME = ""
-PASSWORD = ""
-
-
 class Looperman_Downloader:
     url = ""
     soup = BeautifulSoup()
@@ -131,13 +127,12 @@ class Looperman_Downloader:
 
     def login(self):
         self.session = requests.Session()
-        login(USERNAME, PASSWORD, self.session)
+        login(self.session)
 
         self.move_to_url()
 
-        logout_href = self.soup.find(
-            "div", attrs={"class": "nav-account"}).find("a")["href"]
-        self.logged_in = "logout" in logout_href
+        for link in self.soup.find_all("a"):
+            self.logged_in = "login" not in link["href"]
 
     """
     Moves to the url by requesting it and downloading the html
