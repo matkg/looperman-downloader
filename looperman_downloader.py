@@ -39,9 +39,9 @@ class Looperman_Downloader:
         self.login()
         self.get_fitler_settings()
 
-        #while len(self.loops) < self.amount:
-        self.get_loops()
-            #self.move_to_next_page()
+        while len(self.loops) < self.amount:
+            self.get_loops()
+            self.move_to_next_page()
 
     """
     Gets the filter settings
@@ -62,6 +62,7 @@ class Looperman_Downloader:
         idx = 0
         tags = self.soup.find_all("div", attrs={"class": "tag-wrapper"})
         titles = self.soup.find_all("a", attrs={"class": "player-title"})
+        wav_links = self.soup.select('a[href*=".com/getfiles"]')
 
         for player_wrapper in self.soup.find_all("div", attrs={"class": "player-wrapper"}):
 
@@ -72,11 +73,9 @@ class Looperman_Downloader:
             bpm = tags[idx].find("a").getText()
 
             if self.logged_in:
-                link = self.get_wav_link(player_wrapper)
+                link = wav_links[idx]["href"]
             else:
                 link = self.get_mp3_link(player_wrapper)
-
-            print(link)
 
             loop = Loop(
                 genr=SETTINGS[GENRE],
@@ -90,8 +89,7 @@ class Looperman_Downloader:
             self.loops.append(loop)
             idx += 1
 
-    def get_wav_link(self, player_wrapper):
-        return player_wrapper.find("a", class_="player-big-btn btn-download trkd")["href"]
+            print(link)
 
     """
     Gets all mp3 links from player wrappers of one search page
@@ -131,8 +129,12 @@ class Looperman_Downloader:
 
         self.move_to_url()
 
-        for link in self.soup.find_all("a"):
-            self.logged_in = "login" not in link["href"]
+        nav_account = self.soup.find("div", attrs={"class": "nav-account"})
+        for link in nav_account.find_all("a"):
+            url = link["href"]
+            if "profile/" in url:
+                self.logged_in = True
+                print(f"Logged in as:\n{url}")
 
     """
     Moves to the url by requesting it and downloading the html
@@ -141,6 +143,7 @@ class Looperman_Downloader:
     def move_to_url(self):
         r = self.session.get(self.url)
         self.soup = BeautifulSoup(r.text, features="html.parser")
+        print(f"Moved to: {self.url}")
 
     """
     Returns selected attribute of id field in filter 
