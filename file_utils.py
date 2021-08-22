@@ -24,7 +24,7 @@ def download_file(session, url, filename, file_end):
         with open(filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
-    sleep(6) # necessary because of download limit (every minute)
+    sleep(6) # necessary because of download limit (every minute).
 
 def create_dirs(filename):
     if not os.path.exists(os.path.dirname(filename)):
