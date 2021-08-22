@@ -1,6 +1,8 @@
 import shutil
 import os
 import errno
+from time import sleep
+import requests
 
 def download_file(session, url, filename, file_end):
     filename = filename+file_end
@@ -13,11 +15,13 @@ def download_file(session, url, filename, file_end):
     print(f"Download file {filename}")
 
     with session.get(url, stream=True) as r:
-        print(r.raw)
+        if r.status_code is not requests.codes.ok:
+            print(r.json())
+        
         with open(filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
-
+    sleep(5) # necessary because of download limit
 
 def create_dirs(filename):
     if not os.path.exists(os.path.dirname(filename)):
