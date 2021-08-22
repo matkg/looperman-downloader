@@ -4,6 +4,7 @@ import sys
 import re
 from session_utils import login
 from loop import Loop
+from file_utils import download_file
 
 LOOP_DETAIL_REGEX = ".*loops/detail/.*/.*"
 LOOP_FORMAT = ""
@@ -42,6 +43,8 @@ class Looperman_Downloader:
         while len(self.loops) < self.amount:
             self.get_loops()
             self.move_to_next_page()
+
+        self.download_files()
 
     """
     Gets the filter settings
@@ -90,6 +93,13 @@ class Looperman_Downloader:
             idx += 1
 
             print(link)
+
+    def download_files(self):
+        for loop in self.loops:
+            file_end = ".wav" if self.logged_in else ".mp3"
+            filename = f"./Loops/{loop.genre}/{loop.category}/{loop.key}_{loop.bpm}_{loop.title}"
+            download_file(self.session, loop.download_link, filename, file_end)
+
 
     """
     Gets all mp3 links from player wrappers of one search page
