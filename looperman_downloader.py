@@ -5,7 +5,7 @@ import re
 from session_utils import login
 from loop import Loop
 from file_utils import download_file
-from os import path
+import os
 
 CATEGORY = "cid"
 GENRE = "gid"
@@ -31,7 +31,7 @@ class LoopermanDownloader:
         self.data = []
         self.url = url
         self.amount = int(amount)
-        self.location = path.join(location, "")
+        self.location = os.path.join(location, "")
 
     """
     Performs the download of the desired amount of loops
@@ -93,24 +93,32 @@ class LoopermanDownloader:
                 bpm=bpm
             )
 
-            self.loops.append(loop)
+            filename = self.__get_file_name(loop)
             idx += 1
 
+            if os.path.isfile(filename):
+                print(f"File already exists! Skipping: {filename}")
+                continue
+            
+            self.loops.append(loop)
     """
     Downloads all loop files
     """
     def __download_files(self):
         for loop in self.loops:
-            file_end = ".wav" if self.logged_in else ".mp3"
-            filename = f"{self.location}Looperman Loops/{loop.genre}/{loop.category}/{loop.key} {loop.bpm} {loop.title}"
-            filename = filename.replace(" ", "_")
-            download_file(self.session, loop.download_link, filename, file_end)
+            filename = self.__get_file_name(loop)
+            download_file(self.session, loop.download_link, filename)
 
+    """
+    Generates a filename
+    """
+    def __get_file_name(self, loop):
+        file_end = ".wav" if self.logged_in else ".mp3"
+        return f"{self.location}Looperman Loops/{loop.genre}/{loop.category}/{loop.key} {loop.bpm} {loop.title}{file_end}".replace(" ", "_")
 
     """
     Gets all mp3 links from player wrappers of one search page
     """
-
     def __get_mp3_link(self, player_wrapper):
         return player_wrapper["rel"]
 
