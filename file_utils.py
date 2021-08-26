@@ -2,7 +2,6 @@ import shutil
 import os
 import errno
 from time import sleep
-import requests
 import magic
 
 LIMIT_REACHED = "Sorry, due to high demand, download limits are in place and you have reached the limit.<br> Try again in 24 hours."
