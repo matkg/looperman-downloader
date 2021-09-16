@@ -11,7 +11,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-⚠️ **Be aware that your account or ip address could get blocked if you make excessive use of this script!**
+⚠️ **Be aware that your account or ip address will get blocked if you make excessive use of this script!**
 <br><br>
 
 The script saves loops under the following structure
