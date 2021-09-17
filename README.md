@@ -13,6 +13,13 @@ pip install -r requirements.txt
 
 ⚠️ **Be aware that your account or ip address will get blocked if you make excessive use of this script!**
 <br><br>
+ 
+If loops should be downloaded in .wav format provide credentials inside the `src/credentials.py` like this:
+```python
+email="example@example.com"
+password="example"
+```
+If the credentials are empty only .mp3 files will get downloaded.
 
 The script saves loops under the following structure
 ```bash
